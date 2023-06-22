@@ -1,0 +1,111 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class Car {
+private:
+    string make;
+    string model;
+    int year;
+    bool available;
+
+public:
+    Car(string make, string model, int year) : make(make), model(model), year(year), available(true) {}
+
+    string getMake() const {
+        return make;
+    }
+
+    string getModel() const {
+        return model;
+    }
+
+    int getYear() const {
+        return year;
+    }
+
+    bool isAvailable() const {
+        return available;
+    }
+
+    void rent() {
+        available = false;
+    }
+
+    void returnCar() {
+        available = true;
+    }
+};
+
+class CarRentalSystem {
+private:
+    vector<Car> cars;
+
+public:
+    void addCar(const Car& car) {
+        cars.push_back(car);
+    }
+
+    void rentCar(const string& make, const string& model, int year) {
+        for (auto& car : cars) {
+            if (car.getMake() == make && car.getModel() == model && car.getYear() == year) {
+                if (car.isAvailable()) {
+                    car.rent();
+                    cout << "Car rented successfully!" << endl;
+                } else {
+                    cout << "Car is not available for rent." << endl;
+                }
+                return;
+            }
+        }
+        cout << "Car not found." << endl;
+    }
+
+    void returnCar(const string& make, const string& model, int year) {
+        for (auto& car : cars) {
+            if (car.getMake() == make && car.getModel() == model && car.getYear() == year) {
+                car.returnCar();
+                cout << "Car returned successfully!" << endl;
+                return;
+            }
+        }
+        cout << "Car not found." << endl;
+    }
+
+    void displayAvailableCars() {
+        cout << "Available Cars:" << endl;
+        for (const auto& car : cars) {
+            if (car.isAvailable()) {
+                cout << "Make: " << car.getMake() << ", Model: " << car.getModel() << ", Year: " << car.getYear() << endl;
+            }
+        }
+    }
+};
+
+int main() {
+    CarRentalSystem rentalSystem;
+
+    Car car1("Toyota", "Camry", 2020);
+    Car car2("Honda", "Civic", 2019);
+    Car car3("Ford", "Mustang", 2021);
+
+    rentalSystem.addCar(car1);
+    rentalSystem.addCar(car2);
+    rentalSystem.addCar(car3);
+
+    rentalSystem.displayAvailableCars();
+
+    rentalSystem.rentCar("Toyota", "Camry", 2020);
+    rentalSystem.rentCar("Honda", "Civic", 2019);
+    rentalSystem.rentCar("Ford", "Mustang", 2021);
+
+    rentalSystem.displayAvailableCars();
+
+    rentalSystem.returnCar("Toyota", "Camry", 2020);
+
+    rentalSystem.displayAvailableCars();
+
+    return 0;
+}
